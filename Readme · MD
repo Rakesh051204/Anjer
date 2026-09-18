@@ -1,0 +1,48 @@
+# Daily Vivaldi Social auto-poster
+
+Posts one fresh AI/tech news headline + link to your Vivaldi Social
+account every day, automatically — no server of your own needed.
+
+## 1. Get an access token
+On Vivaldi Social: **Preferences → Development → New Application**
+- Name: `daily-poster` (or anything)
+- Scopes: at least `write:statuses`
+- Create, then copy the **access token** it gives you.
+
+## 2. Put these files in a GitHub repo
+```
+your-repo/
+├── daily_poster.py
+├── requirements.txt
+├── posted_links.json      (create as empty: [])
+└── .github/
+    └── workflows/
+        └── daily-post.yml   (rename from daily-post.yml above)
+```
+
+## 3. Add repo secrets
+Repo → **Settings → Secrets and variables → Actions → New repository secret**
+- `VIVALDI_ACCESS_TOKEN` = the token from step 1
+- `VIVALDI_INSTANCE_URL` = `https://vivaldi.social` (or your instance's URL)
+
+## 4. Done
+GitHub Actions will run the script daily on its own schedule (edit the
+`cron` line in the workflow to change the time — it's in UTC). You can
+also trigger a test run manually from the repo's **Actions** tab any
+time via "Run workflow".
+
+## Notes / easy tweaks
+- **Change news sources:** edit the `FEEDS` list in `daily_poster.py` —
+  any RSS feed works (add your own interests, not just AI/tech).
+- **Post images too:** Mastodon's `/api/v1/media` endpoint uploads an
+  image first, then you attach its returned ID to the status — say the
+  word if you want this added.
+- **No repeats:** `posted_links.json` tracks what's already been
+  shared, so it won't post the same story twice.
+- **Local test run instead of GitHub Actions:**
+  ```
+  pip install -r requirements.txt
+  export VIVALDI_ACCESS_TOKEN=your_token
+  export VIVALDI_INSTANCE_URL=https://vivaldi.social
+  python daily_poster.py
+  ```
