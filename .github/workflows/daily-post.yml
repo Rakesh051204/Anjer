@@ -18,8 +18,10 @@ jobs:
       - run: pip install -r requirements.txt
 
       - run: python daily_poster.py
-        env: VIVALDI_ACCESS_TOKEN	qbYwE3FTyocyq5iYbb00SIPbbjCg8AiCifOaBNoio80 (the token you got earlier)
-        VIVALDI_INSTANCE_URL	https://vivaldi.social
+        env:
+          VIVALDI_ACCESS_TOKEN: ${{ secrets.VIVALDI_ACCESS_TOKEN }}
+          VIVALDI_INSTANCE_URL: ${{ secrets.VIVALDI_INSTANCE_URL }}
+
       - run: |
           git config user.name "daily-poster-bot"
           git config user.email "actions@github.com"
