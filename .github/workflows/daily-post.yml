@@ -1,0 +1,28 @@
+name: Daily Vivaldi Social Post
+
+on:
+  schedule:
+    - cron: "0 9 * * *"
+  workflow_dispatch: {}
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install -r requirements.txt
+
+      - run: python daily_poster.py
+        env: VIVALDI_ACCESS_TOKEN	qbYwE3FTyocyq5iYbb00SIPbbjCg8AiCifOaBNoio80 (the token you got earlier)
+        VIVALDI_INSTANCE_URL	https://vivaldi.social
+      - run: |
+          git config user.name "daily-poster-bot"
+          git config user.email "actions@github.com"
+          git add posted_links.json
+          git diff --cached --quiet || git commit -m "Update posted links log"
+          git push
